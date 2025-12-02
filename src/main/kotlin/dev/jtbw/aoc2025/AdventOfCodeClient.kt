@@ -108,7 +108,7 @@ class AdventOfCodeClient : AutoCloseable {
    */
   suspend fun submitAnswer(year: Int, day: Int, part: Int, answer: String): AnswerResponse {
     val yearDir = File(cacheDir, year.toString())
-    val answerFile = File(yearDir, "answer$part.txt")
+    val answerFile = File(yearDir, "answer${day}_$part.txt")
 
     // Check cache first
     if (answerFile.exists()) {
