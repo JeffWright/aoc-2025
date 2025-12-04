@@ -32,3 +32,31 @@ fun <T> Iterator<T>.nextOrNull(): T? {
     null
   }
 }
+
+/** Returns the 'largest' (by [block]) [n] items, in sorted order (sorted by value) */
+fun <T, R : Comparable<R>> Iterable<T>.multiMaxBy(n: Int, block: (T) -> R): List<IndexedValue<T>> {
+  val iter = iterator()
+  var i = 0
+  val q = ArrayDeque<IndexedValue<T>>(n)
+  repeat(n) {
+    if (iter.hasNext()) {
+      q.add(IndexedValue(i++, iter.next()))
+    }
+  }
+  q.sortBy { (_, item) -> block(item) }
+
+  iter.forEach { item ->
+    val last = q.last()
+    if (block(item) > block(last.value)) {
+      q.addLast(IndexedValue(i, item))
+      if (q.size > n) {
+        q.removeFirst()
+      }
+    }
+    i++
+  }
+
+  return q
+}
+
+data class IndexedValue<T>(val idx: Int, val value: T)

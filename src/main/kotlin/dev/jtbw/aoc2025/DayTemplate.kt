@@ -6,13 +6,20 @@ object DayTemplate {
     """
       .trimIndent()
 
-  fun run() {}
+  fun run() {
+    val day = TODO()
+    sample(sample, "", ::part1)
+    day(day, 1, ::part1)
 
-  suspend fun part1(input: String): String {
+    sample(sample, "", ::part2)
+    day(day, 2, ::part2)
+  }
+
+  suspend fun part1(input: String): Any {
     TODO()
   }
 
-  suspend fun part2(input: String): String {
+  suspend fun part2(input: String): Any {
     TODO()
   }
 }
