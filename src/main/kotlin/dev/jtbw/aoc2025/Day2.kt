@@ -1,5 +1,8 @@
 package dev.jtbw.aoc2025
 
+import dev.jtbw.aoc2025.lib.distinctUntilChanged
+import dev.jtbw.aoc2025.lib.nextOrNull
+import dev.jtbw.aoc2025.lib.repeat
 import kotlin.math.absoluteValue
 import kotlin.math.log10
 import kotlin.math.pow

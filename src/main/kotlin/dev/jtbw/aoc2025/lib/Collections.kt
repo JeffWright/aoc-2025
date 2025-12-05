@@ -1,16 +1,4 @@
-package dev.jtbw.aoc2025
-
-import kotlin.math.pow
-
-fun Long.repeat(times: Int): Long {
-  val len = numDigits()
-  var n = this
-  repeat(times - 1) {
-    n = (n * 10.0.pow(len)).toLong()
-    n += this
-  }
-  return n
-}
+package dev.jtbw.aoc2025.lib
 
 fun <T : Any> Sequence<T>.distinctUntilChanged(): Sequence<T> {
   val seq = this
@@ -59,4 +47,14 @@ fun <T, R : Comparable<R>> Iterable<T>.multiMaxBy(n: Int, block: (T) -> R): List
   return q
 }
 
-data class IndexedValue<T>(val idx: Int, val value: T)
+fun <T> List<T>.slice(from: Int, to: Int) {}
+
+fun <T> List<T>.countOf(item: T): Int = count { it == item }
+
+private operator fun <E> MutableList<E>.set(indices: IntRange, value: E) {
+  indices.forEach { this[it] = value }
+}
+
+private operator fun <E> MutableList<E>.set(indices: Iterable<Int>, value: E) {
+  indices.forEach { this[it] = value }
+}

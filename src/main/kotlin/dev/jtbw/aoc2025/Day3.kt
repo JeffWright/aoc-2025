@@ -1,5 +1,7 @@
 package dev.jtbw.aoc2025
 
+import dev.jtbw.aoc2025.lib.IndexedValue
+
 object Day3 {
   val sample =
     """
