@@ -26,6 +26,8 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Generate README
+        env:
+          AOC_SESSION: ${{ secrets.AOC_SESSION }}
         run: ./gradlew run generateStatus
 
       - name: Commit and push if changed
