@@ -14,9 +14,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
  *
  * ## Authentication
  *
- * The session token is automatically read from `~/.aoc/session_token`. This file must exist and
- * contain your Advent of Code session token (obtained from the `session` cookie when logged into
- * adventofcode.com).
+ * The session token is automatically read from AOC_SESSION environment variable or
+ * `~/.aoc/session_token`.
  *
  * ## Caching
  *
@@ -42,13 +41,16 @@ class AdventOfCodeClient : AutoCloseable {
     val sessionFile = File(aocDir, "session_token")
 
     sessionToken =
-      if (sessionFile.exists()) {
-        sessionFile.readText().trim()
-      } else {
-        throw IllegalStateException(
-          "Session token not found. Please create ${sessionFile.absolutePath}"
-        )
-      }
+      System.getenv("AOC_SESSION")
+        ?: run {
+          if (sessionFile.exists()) {
+            sessionFile.readText().trim()
+          } else {
+            throw IllegalStateException(
+              "Session token not found. Please set AOC_SESSION or create ${sessionFile.absolutePath}"
+            )
+          }
+        }
 
     cacheDir = aocDir
 
