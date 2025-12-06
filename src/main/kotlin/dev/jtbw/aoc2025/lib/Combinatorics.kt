@@ -7,9 +7,9 @@ fun <T> allPossibleLists(options: List<T>, size: Int): Sequence<List<T>> {
   val radix = options.size
   val max = radix.toDouble().pow(size.toDouble()).toInt()
   return (0..<max)
-    .asSequence()
-    .map { it.toString(radix).padStart(size, '0') }
-    .map { string -> string.map { char -> options[char.digitToInt()] } }
+      .asSequence()
+      .map { it.toString(radix).padStart(size, '0') }
+      .map { string -> string.map { char -> options[char.digitToInt()] } }
 }
 
 fun <T> List<T>.pairwise(): Sequence<Pair<T, T>> {

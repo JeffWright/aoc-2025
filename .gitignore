@@ -47,3 +47,8 @@ bin/
 
 ### Other ###
 .claude
+
+metrics.json
+
+**/main.input
+**/session_token

@@ -7,6 +7,7 @@ typealias Grid<T> = List<List<T>>
 typealias MutableGrid<T> = List<MutableList<T>>
 
 operator fun <T> Grid<T>.get(x: Int, y: Int) = this[y][x]
+operator fun <T> Grid<T>.get(x: Long, y: Long) = this[y.toInt()][x.toInt()]
 
 operator fun <T> Grid<T>.get(offset: Offset) = this[offset.y.toInt()][offset.x.toInt()]
 

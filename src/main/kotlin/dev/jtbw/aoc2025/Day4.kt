@@ -10,32 +10,9 @@ import dev.jtbw.aoc2025.lib.twodeespace.set
 import dev.jtbw.aoc2025.lib.twodeespace.toGrid
 import dev.jtbw.aoc2025.lib.twodeespace.toMutableGrid
 
-object Day4 {
-  val sample =
-    """
-    ..@@.@@@@.
-    @@@.@.@.@@
-    @@@@@.@.@@
-    @.@@@@..@.
-    @@.@@@@.@@
-    .@@@@@@@.@
-    .@.@.@.@@@
-    @.@@@.@@@@
-    .@@@@@@@@.
-    @.@.@@@.@.
-    """
-      .trimIndent()
+object Day4 : AoCDay {
 
-  fun run() {
-    val day = 4
-    sample(sample, "13", ::part1)
-    day(day, 1, ::part1)
-
-    sample(sample, "43", ::part2)
-    day(day, 2, ::part2)
-  }
-
-  suspend fun part1(input: String): Any {
+  override suspend fun part1(input: String): Any {
     val grid = input.lines().toGrid { Tile.from(it) }
 
     return grid.bounds.offsets().count { offset ->
@@ -43,22 +20,22 @@ object Day4 {
     }
   }
 
-  suspend fun part2(input: String): Any {
+  override suspend fun part2(input: String): Any {
     val grid = input.lines().toGrid { Tile.from(it) }.toMutableGrid()
     val queue = mutableSetOf<Offset>()
     var removed = 0
 
     // Prime the queue with all accessible tiles
     grid.bounds
-      .offsets()
-      .filter { grid.getOrNull(it) == Tile.PAPER }
-      .forEach { offset ->
-        countNeighbors(grid, offset).also { neighbors ->
-          if (neighbors < 4) {
-            queue.add(offset)
+        .offsets()
+        .filter { grid.getOrNull(it) == Tile.PAPER }
+        .forEach { offset ->
+          countNeighbors(grid, offset).also { neighbors ->
+            if (neighbors < 4) {
+              queue.add(offset)
+            }
           }
         }
-      }
 
     while (queue.isNotEmpty()) {
       // Pop next

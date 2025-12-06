@@ -2,31 +2,9 @@ package dev.jtbw.aoc2025
 
 import kotlin.math.absoluteValue
 
-object Day1 {
-  val sample =
-    """
-    L68
-    L30
-    R48
-    L5
-    R60
-    L55
-    L1
-    L99
-    R14
-    L82
-    """
-      .trimIndent()
+object Day1 : AoCDay {
 
-  fun run() {
-    sample(sample, "3", ::part1)
-    day(1, 1, ::part1)
-
-    sample(sample, "6", ::part2)
-    day(1, 2, ::part2)
-  }
-
-  suspend fun part1(input: String): String {
+  override suspend fun part1(input: String): String {
     val input = input.lines()
 
     var dial = 50
@@ -43,7 +21,7 @@ object Day1 {
     return zeroes.toString()
   }
 
-  suspend fun part2(input: String): String {
+  override suspend fun part2(input: String): String {
     val input = input.lines()
 
     var dial = 50

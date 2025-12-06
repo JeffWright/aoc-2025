@@ -7,57 +7,43 @@ import kotlin.math.absoluteValue
 import kotlin.math.log10
 import kotlin.math.pow
 
-object Day2 {
-  val sample =
-    """
-    11-22,95-115,998-1012,1188511880-1188511890,222220-222224,1698522-1698528,446443-446449,38593856-38593862,565653-565659,824824821-824824827,2121212118-2121212124
-    """
-      .trimIndent()
-
-  fun run() {
-    sample(sample, "1227775554", ::part1)
-    day(2, 1, ::part1)
-
-    sample(sample, "4174379265", ::part2)
-    day(2, 2, ::part2)
-  }
-
-  suspend fun part1(input: String): String {
+object Day2 : AoCDay {
+  override suspend fun part1(input: String): String {
     val ranges =
-      input
-        .split(",")
-        .map { it.substringBefore("-").toLong()..it.substringAfter("-").toLong() }
-        .sortedBy { it.first }
-        .asSequence()
+        input
+            .split(",")
+            .map { it.substringBefore("-").toLong()..it.substringAfter("-").toLong() }
+            .sortedBy { it.first }
+            .asSequence()
 
     return ranges
-      .flatMap { range ->
-        val numDigits = range.first.numDigits()
-        val evenNumDigits = numDigits.rem(2) == 0
+        .flatMap { range ->
+          val numDigits = range.first.numDigits()
+          val evenNumDigits = numDigits.rem(2) == 0
 
-        val subnumStart =
-          when {
-            evenNumDigits -> range.first.slice(0..<(numDigits / 2))
-            else -> 10.0.pow(numDigits / 2).toLong()
-          }
+          val subnumStart =
+              when {
+                evenNumDigits -> range.first.slice(0..<(numDigits / 2))
+                else -> 10.0.pow(numDigits / 2).toLong()
+              }
 
-        (subnumStart..Long.MAX_VALUE)
-          .asSequence()
-          .map { it.repeat(2) }
-          .takeWhile { it <= range.last }
-          .filter { it in range }
-      }
-      .sum()
-      .toString()
+          (subnumStart..Long.MAX_VALUE)
+              .asSequence()
+              .map { it.repeat(2) }
+              .takeWhile { it <= range.last }
+              .filter { it in range }
+        }
+        .sum()
+        .toString()
   }
 
-  suspend fun part2(input: String): String {
+  override suspend fun part2(input: String): String {
     val ranges =
-      input
-        .split(",")
-        .map { it.substringBefore("-").toLong()..it.substringAfter("-").toLong() }
-        .sortedBy { it.first }
-        .asSequence()
+        input
+            .split(",")
+            .map { it.substringBefore("-").toLong()..it.substringAfter("-").toLong() }
+            .sortedBy { it.first }
+            .asSequence()
 
     return ranges.flatMap { range -> invalidIdsIn(range) }.sum().toString()
   }
@@ -76,10 +62,10 @@ object Day2 {
     }
 
     return SortedIteratorSet(iterators)
-      .asSequence()
-      .distinctUntilChanged()
-      .dropWhile { it < range.first }
-      .takeWhile { it <= range.last }
+        .asSequence()
+        .distinctUntilChanged()
+        .dropWhile { it < range.first }
+        .takeWhile { it <= range.last }
   }
 
   /**
@@ -94,11 +80,11 @@ object Day2 {
     val subnumEnd = 10.0.pow(subdigits).toLong()
     return sequence {
       val subnumStart =
-        if (min.numDigits() < digits) {
-          10.0.pow(subdigits - 1).toLong()
-        } else {
-          min.slice(0..<(subdigits))
-        }
+          if (min.numDigits() < digits) {
+            10.0.pow(subdigits - 1).toLong()
+          } else {
+            min.slice(0..<(subdigits))
+          }
       (subnumStart..<subnumEnd).forEach { sub -> yield(sub.repeat(repeats)) }
     }
   }

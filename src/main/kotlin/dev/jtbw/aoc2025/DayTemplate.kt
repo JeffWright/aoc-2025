@@ -1,25 +1,17 @@
 package dev.jtbw.aoc2025
 
-object DayTemplate {
-  val sample =
-    """
-    """
-      .trimIndent()
+import dev.jtbw.aoc2025.lib.overlaps
+import dev.jtbw.aoc2025.lib.plus
+import dev.jtbw.aoc2025.lib.size
+import dev.jtbw.aoc2025.lib.toLongRange
 
-  fun run() {
-    val day = TODO()
-    sample(sample, "", ::part1)
-    day(day, 1, ::part1)
+object DayTemplate : AoCDay {
 
-    sample(sample, "", ::part2)
-    day(day, 2, ::part2)
-  }
-
-  suspend fun part1(input: String): Any {
+  override suspend fun part1(input: String): Any {
     TODO()
   }
 
-  suspend fun part2(input: String): Any {
+  override suspend fun part2(input: String): Any {
     TODO()
   }
 }
