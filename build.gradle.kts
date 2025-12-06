@@ -31,3 +31,10 @@ tasks.withType<Test> { testLogging { showStandardStreams = true } }
 kotlin { jvmToolchain(17) }
 
 application { mainClass.set("dev.jtbw.aoc2025.MainKt") }
+
+tasks.register<JavaExec>("generateStatus") {
+  group = "documentation"
+  description = "Generate README.md from metrics.json"
+  classpath = sourceSets["main"].runtimeClasspath
+  mainClass.set("dev.jtbw.aoc2025.GenerateStatusKt")
+}
