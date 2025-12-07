@@ -1,6 +1,5 @@
 package dev.jtbw.aoc2025.lib.twodeespace
 
-
 data class Rect(val topLeft: Offset, val bottomRight: Offset) {
   val top: Long
     get() = topLeft.y
@@ -20,7 +19,7 @@ operator fun Rect.contains(pos: Offset): Boolean {
 }
 
 fun Rect.offsets(rowMajor: Boolean = true): Sequence<Offset> = sequence {
-  if(rowMajor) {
+  if (rowMajor) {
     (top..bottom).forEach { y -> (left..right).forEach { x -> yield(Offset(x, y)) } }
   } else {
     (left..right).forEach { y -> (top..bottom).forEach { x -> yield(Offset(x, y)) } }

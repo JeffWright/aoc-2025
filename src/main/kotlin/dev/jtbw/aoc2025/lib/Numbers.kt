@@ -5,7 +5,7 @@ fun Iterable<Char>.digitsToLong(): Long {
   return fold(0L) { acc, i -> (acc * 10) + i.digitToInt() }
 }
 
-///** [1, 2, 3] -> 123 */
-//fun Iterable<Int>.digitsToLong(): Long {
+/// ** [1, 2, 3] -> 123 */
+// fun Iterable<Int>.digitsToLong(): Long {
 //  return fold(0L) { acc, i -> (acc * 10) + i }
-//}
+// }

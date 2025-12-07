@@ -10,11 +10,11 @@ data class PartMetrics(val runtime_ms: Long, val success: Boolean)
 data class DayMetrics(val part1: PartMetrics?, val part2: PartMetrics?)
 
 data class Metrics(
-    val year: Int,
-    val days: Map<String, DayMetrics>,
-    val total_stars: Int,
-    val total_days: Int,
-    val last_updated: String,
+  val year: Int,
+  val days: Map<String, DayMetrics>,
+  val total_stars: Int,
+  val total_days: Int,
+  val last_updated: String,
 )
 
 fun main() {
@@ -35,7 +35,7 @@ fun generateStatus() {
     appendLine("# 🎄 Advent of Code ${metrics.year}")
     appendLine()
     appendLine(
-        "![](https://img.shields.io/badge/⭐_Stars-${metrics.total_stars}/${NUM_DAYS*2}-brightgreen)"
+      "![](https://img.shields.io/badge/⭐_Stars-${metrics.total_stars}/${NUM_DAYS*2}-brightgreen)"
     )
     appendLine()
     appendLine("## Runtimes")
@@ -50,18 +50,18 @@ fun generateStatus() {
       val dayLink = "[${dayString}](src/main/kotlin/dev/jtbw/aoc2025/Day${day}.kt)"
 
       val part1Badge =
-          dayMetrics?.part1?.let {
-            val runtime = dayMetrics.part1.runtime_ms
-            val color = getRuntimeColor(runtime)
-            "![](https://img.shields.io/badge/${runtime}ms-${color})"
-          } ?: "![](https://img.shields.io/badge/pending-lightgrey)"
+        dayMetrics?.part1?.let {
+          val runtime = dayMetrics.part1.runtime_ms
+          val color = getRuntimeColor(runtime)
+          "![](https://img.shields.io/badge/${runtime}ms-${color})"
+        } ?: "![](https://img.shields.io/badge/pending-lightgrey)"
 
       val part2Badge =
-          dayMetrics?.part2?.let {
-            val runtime = dayMetrics.part2.runtime_ms
-            val color = getRuntimeColor(runtime)
-            "![](https://img.shields.io/badge/${runtime}ms-${color})"
-          } ?: "![](https://img.shields.io/badge/pending-lightgrey)"
+        dayMetrics?.part2?.let {
+          val runtime = dayMetrics.part2.runtime_ms
+          val color = getRuntimeColor(runtime)
+          "![](https://img.shields.io/badge/${runtime}ms-${color})"
+        } ?: "![](https://img.shields.io/badge/pending-lightgrey)"
 
       appendLine("| $dayLink | $part1Badge | $part2Badge |")
     }

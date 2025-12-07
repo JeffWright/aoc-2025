@@ -1,5 +1,3 @@
-import com.ncorti.ktfmt.gradle.TrailingCommaManagementStrategy
-
 plugins {
   kotlin("jvm") version "2.2.20"
   id("com.ncorti.ktfmt.gradle") version "0.25.0"

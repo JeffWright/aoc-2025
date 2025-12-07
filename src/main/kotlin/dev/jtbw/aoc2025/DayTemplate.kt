@@ -1,9 +1,6 @@
 package dev.jtbw.aoc2025
 
-import dev.jtbw.aoc2025.lib.overlaps
 import dev.jtbw.aoc2025.lib.plus
-import dev.jtbw.aoc2025.lib.size
-import dev.jtbw.aoc2025.lib.toLongRange
 
 object DayTemplate : AoCDay {
 

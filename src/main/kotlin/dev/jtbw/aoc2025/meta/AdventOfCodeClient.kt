@@ -3,10 +3,10 @@ package dev.jtbw.aoc2025.meta
 import dev.jtbw.aoc2025.e
 import dev.jtbw.aoc2025.i
 import java.io.File
+import java.io.FileNotFoundException
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
-import java.io.FileNotFoundException
 
 /**
  * Client for interacting with the Advent of Code API.
@@ -40,63 +40,63 @@ class AdventOfCodeClient : AutoCloseable {
     val sessionFile = File("src/main/resources/session_token")
 
     sessionToken =
-        System.getenv("AOC_SESSION")
-            ?: run {
-              if (sessionFile.exists()) {
-                sessionFile.readText().trim()
-              } else {
-                throw IllegalStateException(
-                    "Session token not found. Please set AOC_SESSION or create ${sessionFile.absolutePath}"
-                )
-              }
-            }
+      System.getenv("AOC_SESSION")
+        ?: run {
+          if (sessionFile.exists()) {
+            sessionFile.readText().trim()
+          } else {
+            throw IllegalStateException(
+              "Session token not found. Please set AOC_SESSION or create ${sessionFile.absolutePath}"
+            )
+          }
+        }
 
     val retrofit =
-        Retrofit.Builder()
-            .baseUrl("https://adventofcode.com/")
-            .client(client)
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
+      Retrofit.Builder()
+        .baseUrl("https://adventofcode.com/")
+        .client(client)
+        .addConverterFactory(ScalarsConverterFactory.create())
+        .build()
 
     service = retrofit.create(AdventOfCodeService::class.java)
   }
 
-  suspend fun fetchInput(data : InputAndAnswer): String {
-    data.getInput()
-      ?.let { return it }
+  suspend fun fetchInput(data: InputAndAnswer): String {
+    data.getInput()?.let {
+      return it
+    }
 
     // Fetch from API
     val input = service.getInput(data.year, data.day, "session=$sessionToken")
 
-    return input.also {
-      data.recordInput(it)
-    }
+    return input.also { data.recordInput(it) }
   }
 
   suspend fun checkAnswer(data: InputAndAnswer, answer: String): AnswerResponse {
-    val knownAnswer= data.getCorrectAnswer()
-    if(knownAnswer != null) {
-      return if(answer == knownAnswer) {
+    val knownAnswer = data.getCorrectAnswer()
+    if (knownAnswer != null) {
+      return if (answer == knownAnswer) {
         AnswerResponse.Correct
       } else {
         AnswerResponse.Wrong
       }
     }
 
-    if(!data.primary) {
+    if (!data.primary) {
       throw FileNotFoundException("No such file: ${data.answerFile.absolutePath}")
     }
 
     // Submit to API
-    val response = service.submitAnswer(data.year, data.day, data.part, answer, "session=$sessionToken")
+    val response =
+      service.submitAnswer(data.year, data.day, data.part, answer, "session=$sessionToken")
     val body = response.body() ?: ""
 
     val result =
-        AnswerResponse.entries.firstOrNull { it.string in body }
-            ?: run {
-              i(body)
-              error("No matching AnswerResponse")
-            }
+      AnswerResponse.entries.firstOrNull { it.string in body }
+        ?: run {
+          i(body)
+          error("No matching AnswerResponse")
+        }
 
     i("Result = $result")
 
@@ -115,10 +115,10 @@ class AdventOfCodeClient : AutoCloseable {
     // Cache if successful
     if (result == AnswerResponse.Correct) {
       data.recordCorrectAnswer(answer)
-    //} else if (result == AnswerResponse.OldLevel) {
-    //   TODO JTW: for writing new files
-      //data.recordCorrectAnswer(answer)
-      //return AnswerResponse.Correct
+      // } else if (result == AnswerResponse.OldLevel) {
+      //   TODO JTW: for writing new files
+      // data.recordCorrectAnswer(answer)
+      // return AnswerResponse.Correct
     }
 
     return result

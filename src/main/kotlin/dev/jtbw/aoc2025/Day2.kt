@@ -10,40 +10,42 @@ import kotlin.math.pow
 object Day2 : AoCDay {
   override suspend fun part1(input: String): String {
     val ranges =
-        input
-            .split(",")
-            .map { it.substringBefore("-").toLong()..it.substringAfter("-").toLong() }
-            .sortedBy { it.first }
-            .asSequence()
+      input
+        .trim()
+        .split(",")
+        .map { it.substringBefore("-").toLong()..it.substringAfter("-").toLong() }
+        .sortedBy { it.first }
+        .asSequence()
 
     return ranges
-        .flatMap { range ->
-          val numDigits = range.first.numDigits()
-          val evenNumDigits = numDigits.rem(2) == 0
+      .flatMap { range ->
+        val numDigits = range.first.numDigits()
+        val evenNumDigits = numDigits.rem(2) == 0
 
-          val subnumStart =
-              when {
-                evenNumDigits -> range.first.slice(0..<(numDigits / 2))
-                else -> 10.0.pow(numDigits / 2).toLong()
-              }
+        val subnumStart =
+          when {
+            evenNumDigits -> range.first.slice(0..<(numDigits / 2))
+            else -> 10.0.pow(numDigits / 2).toLong()
+          }
 
-          (subnumStart..Long.MAX_VALUE)
-              .asSequence()
-              .map { it.repeat(2) }
-              .takeWhile { it <= range.last }
-              .filter { it in range }
-        }
-        .sum()
-        .toString()
+        (subnumStart..Long.MAX_VALUE)
+          .asSequence()
+          .map { it.repeat(2) }
+          .takeWhile { it <= range.last }
+          .filter { it in range }
+      }
+      .sum()
+      .toString()
   }
 
   override suspend fun part2(input: String): String {
     val ranges =
-        input
-            .split(",")
-            .map { it.substringBefore("-").toLong()..it.substringAfter("-").toLong() }
-            .sortedBy { it.first }
-            .asSequence()
+      input
+        .trim()
+        .split(",")
+        .map { it.substringBefore("-").toLong()..it.substringAfter("-").toLong() }
+        .sortedBy { it.first }
+        .asSequence()
 
     return ranges.flatMap { range -> invalidIdsIn(range) }.sum().toString()
   }
@@ -62,10 +64,10 @@ object Day2 : AoCDay {
     }
 
     return SortedIteratorSet(iterators)
-        .asSequence()
-        .distinctUntilChanged()
-        .dropWhile { it < range.first }
-        .takeWhile { it <= range.last }
+      .asSequence()
+      .distinctUntilChanged()
+      .dropWhile { it < range.first }
+      .takeWhile { it <= range.last }
   }
 
   /**
@@ -80,11 +82,11 @@ object Day2 : AoCDay {
     val subnumEnd = 10.0.pow(subdigits).toLong()
     return sequence {
       val subnumStart =
-          if (min.numDigits() < digits) {
-            10.0.pow(subdigits - 1).toLong()
-          } else {
-            min.slice(0..<(subdigits))
-          }
+        if (min.numDigits() < digits) {
+          10.0.pow(subdigits - 1).toLong()
+        } else {
+          min.slice(0..<(subdigits))
+        }
       (subnumStart..<subnumEnd).forEach { sub -> yield(sub.repeat(repeats)) }
     }
   }

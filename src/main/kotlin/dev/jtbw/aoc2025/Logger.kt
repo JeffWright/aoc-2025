@@ -10,6 +10,6 @@ fun i(msg: Any) = println(msg)
 fun e(msg: Any) = println("$ANSI_RED$msg$ANSI_RESET")
 
 fun d(msg: Any) =
-    if (DEBUG) {
-      println(msg)
-    } else {}
+  if (DEBUG) {
+    println(msg)
+  } else {}

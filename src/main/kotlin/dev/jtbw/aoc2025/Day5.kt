@@ -23,19 +23,19 @@ object Day5 : AoCDay {
     // just sum up their sizes.
 
     return sequence {
-          var thisRange = ranges.first()
-          ranges.drop(1).forEach { nextRange ->
-            if (thisRange.overlaps(nextRange)) {
-              // merge nextRange into thisRange
-              thisRange += nextRange
-            } else {
-              // emit thisRange and move on
-              yield(thisRange)
-              thisRange = nextRange
-            }
+        var thisRange = ranges.first()
+        ranges.drop(1).forEach { nextRange ->
+          if (thisRange.overlaps(nextRange)) {
+            // merge nextRange into thisRange
+            thisRange += nextRange
+          } else {
+            // emit thisRange and move on
+            yield(thisRange)
+            thisRange = nextRange
           }
-          yield(thisRange)
         }
-        .sumOf { it.size }
+        yield(thisRange)
+      }
+      .sumOf { it.size }
   }
 }

@@ -27,15 +27,15 @@ object Day4 : AoCDay {
 
     // Prime the queue with all accessible tiles
     grid.bounds
-        .offsets()
-        .filter { grid.getOrNull(it) == Tile.PAPER }
-        .forEach { offset ->
-          countNeighbors(grid, offset).also { neighbors ->
-            if (neighbors < 4) {
-              queue.add(offset)
-            }
+      .offsets()
+      .filter { grid.getOrNull(it) == Tile.PAPER }
+      .forEach { offset ->
+        countNeighbors(grid, offset).also { neighbors ->
+          if (neighbors < 4) {
+            queue.add(offset)
           }
         }
+      }
 
     while (queue.isNotEmpty()) {
       // Pop next

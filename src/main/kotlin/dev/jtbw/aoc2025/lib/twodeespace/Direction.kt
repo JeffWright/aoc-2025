@@ -37,12 +37,12 @@ sealed interface Direction {
 
 val Orthogonal.opposite: Orthogonal
   get() =
-      when (this) {
-        DOWN -> UP
-        LEFT -> RIGHT
-        RIGHT -> LEFT
-        UP -> DOWN
-      }
+    when (this) {
+      DOWN -> UP
+      LEFT -> RIGHT
+      RIGHT -> LEFT
+      UP -> DOWN
+    }
 
 val Orthogonal.isHorizontal: Boolean
   get() = this == LEFT || this == RIGHT
@@ -65,81 +65,81 @@ val Direction.offset: Offset
   }
 
 fun Orthogonal.rotateLeft() =
-    when (this) {
-      UP -> LEFT
-      LEFT -> DOWN
-      DOWN -> RIGHT
-      RIGHT -> UP
-    }
+  when (this) {
+    UP -> LEFT
+    LEFT -> DOWN
+    DOWN -> RIGHT
+    RIGHT -> UP
+  }
 
 fun Orthogonal.rotateRight() =
-    when (this) {
-      UP -> RIGHT
-      RIGHT -> DOWN
-      DOWN -> LEFT
-      LEFT -> UP
-    }
+  when (this) {
+    UP -> RIGHT
+    RIGHT -> DOWN
+    DOWN -> LEFT
+    LEFT -> UP
+  }
 
 fun Orthogonal.rotate90(clockwise: Boolean) = if (clockwise) rotateRight() else rotateLeft()
 
 val Diagonal.opposite: Diagonal
   get() =
-      when (this) {
-        DOWNLEFT -> UPRIGHT
-        DOWNRIGHT -> UPLEFT
-        UPLEFT -> DOWNRIGHT
-        UPRIGHT -> DOWNLEFT
-      }
+    when (this) {
+      DOWNLEFT -> UPRIGHT
+      DOWNRIGHT -> UPLEFT
+      UPLEFT -> DOWNRIGHT
+      UPRIGHT -> DOWNLEFT
+    }
 
 val Direction.opposite: Direction
   get() =
-      when (this) {
-        is Orthogonal -> opposite
-        is Diagonal -> opposite
-      }
+    when (this) {
+      is Orthogonal -> opposite
+      is Diagonal -> opposite
+    }
 
 fun Diagonal.rotateRight() =
-    when (this) {
-      DOWNLEFT -> UPLEFT
-      UPLEFT -> UPRIGHT
-      UPRIGHT -> DOWNRIGHT
-      DOWNRIGHT -> DOWNLEFT
-    }
+  when (this) {
+    DOWNLEFT -> UPLEFT
+    UPLEFT -> UPRIGHT
+    UPRIGHT -> DOWNRIGHT
+    DOWNRIGHT -> DOWNLEFT
+  }
 
 fun Diagonal.rotateLeft() =
-    when (this) {
-      UPRIGHT -> UPLEFT
-      UPLEFT -> DOWNLEFT
-      DOWNLEFT -> DOWNRIGHT
-      DOWNRIGHT -> UPRIGHT
-    }
+  when (this) {
+    UPRIGHT -> UPLEFT
+    UPLEFT -> DOWNLEFT
+    DOWNLEFT -> DOWNRIGHT
+    DOWNRIGHT -> UPRIGHT
+  }
 
 fun Diagonal.rotate90(clockwise: Boolean) = if (clockwise) rotateRight() else rotateLeft()
 
 fun Direction.rotate45(clockwise: Boolean) =
-    if (clockwise) {
-      when (this) {
-        UP -> UPRIGHT
-        UPRIGHT -> RIGHT
-        RIGHT -> DOWNRIGHT
-        DOWNRIGHT -> DOWN
-        DOWN -> DOWNLEFT
-        DOWNLEFT -> LEFT
-        LEFT -> UPLEFT
-        UPLEFT -> UP
-      }
-    } else {
-      when (this) {
-        UP -> UPLEFT
-        UPLEFT -> LEFT
-        LEFT -> DOWNLEFT
-        DOWNLEFT -> DOWN
-        DOWN -> DOWNRIGHT
-        DOWNRIGHT -> RIGHT
-        RIGHT -> UPRIGHT
-        UPRIGHT -> UP
-      }
+  if (clockwise) {
+    when (this) {
+      UP -> UPRIGHT
+      UPRIGHT -> RIGHT
+      RIGHT -> DOWNRIGHT
+      DOWNRIGHT -> DOWN
+      DOWN -> DOWNLEFT
+      DOWNLEFT -> LEFT
+      LEFT -> UPLEFT
+      UPLEFT -> UP
     }
+  } else {
+    when (this) {
+      UP -> UPLEFT
+      UPLEFT -> LEFT
+      LEFT -> DOWNLEFT
+      DOWNLEFT -> DOWN
+      DOWN -> DOWNRIGHT
+      DOWNRIGHT -> RIGHT
+      RIGHT -> UPRIGHT
+      UPRIGHT -> UP
+    }
+  }
 
 enum class Axis {
   HORIZONTAL,
@@ -157,12 +157,12 @@ fun Diagonal.component(orth: Orthogonal): Long {
 
 val Orthogonal.axis
   get() =
-      when (this) {
-        LEFT,
-        RIGHT -> HORIZONTAL
-        UP,
-        DOWN -> VERTICAL
-      }
+    when (this) {
+      LEFT,
+      RIGHT -> HORIZONTAL
+      UP,
+      DOWN -> VERTICAL
+    }
 
 fun Direction.toChar(): Char {
   return when (this) {

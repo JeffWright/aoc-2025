@@ -5,6 +5,7 @@ import java.io.File
 object DataFiles {
   private val year = 2025
   private val root = File("src/main/resources/$year")
+
   fun inputAndAnswers(day: Int): List<InputAndAnswer> {
 
     fun f(name: String) = File(File(root, "day$day"), name)
@@ -59,7 +60,7 @@ data class InputAndAnswer(
   val part: Int,
   val primary: Boolean,
   val inputFile: File,
-  val answerFile: File
+  val answerFile: File,
 ) {
   fun recordCorrectAnswer(answer: String) {
     require(!answerFile.exists()) { "Answer file already exists!" }
@@ -67,8 +68,7 @@ data class InputAndAnswer(
   }
 
   fun getInput(): String? {
-    return inputFile.takeIf { it.exists() }
-      ?.readText()
+    return inputFile.takeIf { it.exists() }?.readText()
   }
 
   fun recordInput(input: String) {
@@ -77,8 +77,6 @@ data class InputAndAnswer(
   }
 
   fun getCorrectAnswer(): String? {
-    return answerFile.takeIf { it.exists() }
-      ?.readText()?.trim()
+    return answerFile.takeIf { it.exists() }?.readText()?.trim()
   }
-
 }

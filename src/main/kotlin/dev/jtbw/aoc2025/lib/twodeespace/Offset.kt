@@ -36,20 +36,20 @@ fun Offset.toOrthogonal() = Direction.orthogonals.first { it.offset == this }
 fun Offset.toDirection() = Direction.all.first { it.offset == this }
 
 fun Offset.toUnit() =
-    Offset(
-        x =
-            when {
-              x > 0 -> 1
-              x < 0 -> -1
-              else -> 0
-            },
-        y =
-            when {
-              y > 0 -> 1
-              y < 0 -> -1
-              else -> 0
-            },
-    )
+  Offset(
+    x =
+      when {
+        x > 0 -> 1
+        x < 0 -> -1
+        else -> 0
+      },
+    y =
+      when {
+        y > 0 -> 1
+        y < 0 -> -1
+        else -> 0
+      },
+  )
 
 fun Offset.directionTo(other: Offset): Direction {
   when {
