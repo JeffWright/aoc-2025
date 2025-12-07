@@ -96,8 +96,8 @@ fun <T> Grid<T>.forEachWithOffset(rowMajor: Boolean = true, action: (Offset, T) 
 }
 
 fun <T> Grid<T>.offsetOfFirst(predicate: (T) -> Boolean): Offset {
-  (0..<width).forEach { x ->
-    (0..<height).forEach { y ->
+  (0..<height).forEach { y ->
+    (0..<width).forEach { x ->
       if (predicate(this[x, y])) {
         return Offset(x, y)
       }
@@ -107,14 +107,13 @@ fun <T> Grid<T>.offsetOfFirst(predicate: (T) -> Boolean): Offset {
   throw IllegalArgumentException("No such element")
 }
 
-/** @param byColumn if true, (0, 0), (0, 1), (0, 2) ... (1, 0) */
-fun <T> Grid<T>.asSequenceWithOffset(byColumn: Boolean = false): Sequence<Pair<Offset, T>> {
+fun <T> Grid<T>.asSequenceWithOffset(rowMajor: Boolean = true): Sequence<Pair<Offset, T>> {
   val grid = this
   return sequence {
-    if (byColumn) {
-      (0..<width).forEach { x -> (0..<height).forEach { y -> yield(Offset(x, y) to grid[x, y]) } }
-    } else {
+    if (rowMajor) {
       (0..<height).forEach { y -> (0..<width).forEach { x -> yield(Offset(x, y) to grid[x, y]) } }
+    } else {
+      (0..<width).forEach { x -> (0..<height).forEach { y -> yield(Offset(x, y) to grid[x, y]) } }
     }
   }
 }

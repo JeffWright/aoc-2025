@@ -29,8 +29,8 @@ sealed interface Direction {
   }
 
   companion object {
-    val orthogonals = listOf(UP, DOWN, LEFT, RIGHT)
-    val diagonals = listOf(UPLEFT, UPRIGHT, DOWNLEFT, DOWNRIGHT)
+    val orthogonals = listOf(RIGHT, DOWN, LEFT, UP)
+    val diagonals = listOf(DOWNRIGHT, DOWNLEFT, UPLEFT, UPRIGHT)
     val all = orthogonals + diagonals
   }
 }

@@ -14,7 +14,7 @@ fun Long.repeat(times: Int): Long {
   return n
 }
 
-data class IndexedValue<T>(val idx: Int, val value: T)
+// data class IndexedValue<T>(val idx: Int, val value: T)
 
 fun <T> Sequence<T>.repeatForever(): Sequence<T> {
   val src = this

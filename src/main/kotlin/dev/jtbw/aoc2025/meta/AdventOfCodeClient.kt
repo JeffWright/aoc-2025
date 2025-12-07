@@ -105,6 +105,11 @@ class AdventOfCodeClient : AutoCloseable {
       AnswerResponse.OldLevel -> {}
       AnswerResponse.Wrong -> {
         e("Your answer $answer was wrong!")
+        if ("too high" in body) {
+          e("Too high!")
+        } else if ("too low" in body) {
+          e("Too low!")
+        }
       }
       AnswerResponse.RateLimit -> {
         val time = Regex("You have (.*?) left to wait").find(body)?.groupValues[1]

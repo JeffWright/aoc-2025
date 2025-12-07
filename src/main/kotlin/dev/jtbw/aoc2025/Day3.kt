@@ -1,7 +1,5 @@
 package dev.jtbw.aoc2025
 
-import dev.jtbw.aoc2025.lib.IndexedValue
-
 object Day3 : AoCDay {
   override suspend fun part1(input: String): Any {
     return input.lines().sumOf { line -> joltage(line, 2) }
@@ -12,7 +10,7 @@ object Day3 : AoCDay {
   }
 
   fun joltage(line: String, numDigits: Int): Long {
-    val indexed = line.mapIndexed { idx, ch -> IndexedValue(idx = idx, value = ch.digitToInt()) }
+    val indexed = line.mapIndexed { idx, ch -> IndexedValue(index = idx, value = ch.digitToInt()) }
     var start = 0
     return (numDigits downTo 1)
       .asSequence()
@@ -21,7 +19,7 @@ object Day3 : AoCDay {
         // space
         // at the end
         val pick = indexed.slice(start..indexed.size - num).maxBy { it.value }
-        start = pick.idx + 1
+        start = pick.index + 1
         pick.value
       }
       // Convert list of digits to Long
