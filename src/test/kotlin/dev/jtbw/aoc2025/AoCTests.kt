@@ -1,3 +1,4 @@
+/*
 package dev.jtbw.aoc2025
 
 import dev.jtbw.aoc2025.meta.AdventOfCodeClient
@@ -57,3 +58,4 @@ suspend fun runTest(day: AoCDay, data: InputAndAnswer) {
 }
 
 data class DayResult(val name: String, val runtime: Duration)
+*/

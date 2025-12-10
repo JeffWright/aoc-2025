@@ -1,9 +1,8 @@
 package dev.jtbw.aoc2025.meta
 
-import dev.jtbw.aoc2025.e
+import dev.jtbw.aoc2025.d
 import dev.jtbw.aoc2025.i
 import java.io.File
-import java.io.FileNotFoundException
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -61,69 +60,63 @@ class AdventOfCodeClient : AutoCloseable {
     service = retrofit.create(AdventOfCodeService::class.java)
   }
 
-  suspend fun fetchInput(data: InputAndAnswer): String {
-    data.getInput()?.let {
-      return it
+  suspend fun fetchInput(year: Int, day: Int): String {
+    val cacheFile = DataFiles.realInput(day)
+    if (cacheFile.exists()) {
+      return cacheFile.readText()
     }
 
     // Fetch from API
-    val input = service.getInput(data.year, data.day, "session=$sessionToken")
+    val input = service.getInput(year, day, "session=$sessionToken")
 
-    return input.also { data.recordInput(it) }
+    return input.also { cacheFile.writeText(it) }
   }
 
-  suspend fun checkAnswer(data: InputAndAnswer, answer: String): AnswerResponse {
-    val knownAnswer = data.getCorrectAnswer()
+  suspend fun checkAnswer(answer: String, year: Int, day: Int, part: Int): AnswerResponse {
+    val cacheFile: File = DataFiles.realAnswer(day, part)
+    val knownAnswer = cacheFile.takeIf { it.exists() }?.readText()
     if (knownAnswer != null) {
       return if (answer == knownAnswer) {
         AnswerResponse.Correct
       } else {
-        AnswerResponse.Wrong
+        AnswerResponse.Wrong(expected = knownAnswer, actual = answer)
       }
-    }
-
-    if (!data.primary) {
-      throw FileNotFoundException("No such file: ${data.answerFile.absolutePath}")
     }
 
     // Submit to API
-    val response =
-      service.submitAnswer(data.year, data.day, data.part, answer, "session=$sessionToken")
+    val response = service.submitAnswer(year, day, part, answer, "session=$sessionToken")
     val body = response.body() ?: ""
 
     val result =
-      AnswerResponse.entries.firstOrNull { it.string in body }
-        ?: run {
-          i(body)
-          error("No matching AnswerResponse")
+      when {
+        AnswerResponse.Correct.matchString in body -> AnswerResponse.Correct
+        AnswerResponse.Wrong.matchString in body -> {
+          val expected =
+            if ("too high" in body) {
+              "Too high!"
+            } else if ("too low" in body) {
+              "Too low!"
+            } else {
+              "Unknown"
+            }
+          AnswerResponse.Wrong(expected = expected, actual = answer)
         }
+        AnswerResponse.RateLimit.matchString in body -> {
+          val time = Regex("You have (.*?) left to wait").find(body)?.groupValues[1]
+          AnswerResponse.RateLimit(time)
+        }
+        AnswerResponse.OldLevel.matchString in body -> AnswerResponse.OldLevel
+        else -> {
+          d(body)
+          error("No matching AnswerResponse for")
+        }
+      }
 
     i("Result = $result")
 
-    when (result) {
-      AnswerResponse.Correct,
-      AnswerResponse.OldLevel -> {}
-      AnswerResponse.Wrong -> {
-        e("Your answer $answer was wrong!")
-        if ("too high" in body) {
-          e("Too high!")
-        } else if ("too low" in body) {
-          e("Too low!")
-        }
-      }
-      AnswerResponse.RateLimit -> {
-        val time = Regex("You have (.*?) left to wait").find(body)?.groupValues[1]
-        i("Rate Limited: $time")
-      }
-    }
-
     // Cache if successful
     if (result == AnswerResponse.Correct) {
-      data.recordCorrectAnswer(answer)
-      // } else if (result == AnswerResponse.OldLevel) {
-      //   TODO JTW: for writing new files
-      // data.recordCorrectAnswer(answer)
-      // return AnswerResponse.Correct
+      cacheFile.writeText(answer)
     }
 
     return result
@@ -135,9 +128,25 @@ class AdventOfCodeClient : AutoCloseable {
   }
 }
 
-enum class AnswerResponse(val string: String) {
-  Correct("That's the right answer!"),
-  Wrong("That's not the right answer"),
-  RateLimit("You gave an answer too recently"),
-  OldLevel("You don't seem to be solving the right level"),
+sealed interface AnswerResponse {
+
+  object Correct : AnswerResponse {
+    val matchString: String = "That's the right answer!"
+  }
+
+  data class Wrong(val expected: String?, val actual: String) : AnswerResponse {
+    companion object {
+      val matchString: String = "That's not the right answer"
+    }
+  }
+
+  data class RateLimit(val timeLeft: String?) : AnswerResponse {
+    companion object {
+      val matchString: String = "You gave an answer too recently"
+    }
+  }
+
+  object OldLevel : AnswerResponse {
+    val matchString: String = "You don't seem to be solving the right level"
+  }
 }
