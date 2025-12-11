@@ -4,6 +4,7 @@ import dev.jtbw.aoc2025.lib.twodeespace.Direction.Orthogonal.DOWN
 import dev.jtbw.aoc2025.lib.twodeespace.Direction.Orthogonal.LEFT
 import dev.jtbw.aoc2025.lib.twodeespace.Direction.Orthogonal.RIGHT
 import dev.jtbw.aoc2025.lib.twodeespace.Direction.Orthogonal.UP
+import kotlin.math.sqrt
 
 data class Offset(val x: Long, val y: Long) {
   constructor(x: Int, y: Int) : this(x.toLong(), y.toLong())
@@ -73,4 +74,17 @@ fun Offset.directionTo(other: Offset): Direction {
 
 fun Offset.neighbors(diagonal: Boolean = true): List<Offset> {
   return Direction.all.map { this + it }
+}
+
+fun Offset.distanceTo(other: Offset): Double {
+  val dx = other.x - x
+  val dy = other.y - y
+  return sqrt((dx * dx + dy * dy).toDouble())
+}
+
+/** Skip the sqrt (if you only care about comparing relative distances) */
+fun Offset.fastDistanceTo(other: Offset): Double {
+  val dx = other.x - x
+  val dy = other.y - y
+  return ((dx * dx + dy * dy).toDouble())
 }

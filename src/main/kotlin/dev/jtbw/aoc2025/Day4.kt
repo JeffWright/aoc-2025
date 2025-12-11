@@ -5,17 +5,17 @@ import dev.jtbw.aoc2025.lib.twodeespace.Offset
 import dev.jtbw.aoc2025.lib.twodeespace.bounds
 import dev.jtbw.aoc2025.lib.twodeespace.getOrNull
 import dev.jtbw.aoc2025.lib.twodeespace.neighbors
-import dev.jtbw.aoc2025.lib.twodeespace.offsets
 import dev.jtbw.aoc2025.lib.twodeespace.set
 import dev.jtbw.aoc2025.lib.twodeespace.toGrid
 import dev.jtbw.aoc2025.lib.twodeespace.toMutableGrid
+import dev.jtbw.aoc2025.lib.twodeespace.walkOffsets
 
 object Day4 : AoCDay {
 
   override suspend fun part1(input: String): Any {
     val grid = input.lines().toGrid { Tile.from(it) }
 
-    return grid.bounds.offsets().count { offset ->
+    return grid.bounds.walkOffsets().count { offset ->
       grid.getOrNull(offset) == Tile.PAPER && countNeighbors(grid, offset) < 4
     }
   }
@@ -27,7 +27,7 @@ object Day4 : AoCDay {
 
     // Prime the queue with all accessible tiles
     grid.bounds
-      .offsets()
+      .walkOffsets()
       .filter { grid.getOrNull(it) == Tile.PAPER }
       .forEach { offset ->
         countNeighbors(grid, offset).also { neighbors ->

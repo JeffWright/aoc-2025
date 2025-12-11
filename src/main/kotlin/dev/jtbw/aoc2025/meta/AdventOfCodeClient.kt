@@ -63,11 +63,11 @@ class AdventOfCodeClient : AutoCloseable {
   suspend fun fetchInput(year: Int, day: Int): String {
     val cacheFile = DataFiles.realInput(day)
     if (cacheFile.exists()) {
-      return cacheFile.readText()
+      return cacheFile.readText().trimEnd()
     }
 
     // Fetch from API
-    val input = service.getInput(year, day, "session=$sessionToken")
+    val input = service.getInput(year, day, "session=$sessionToken").trimEnd()
 
     return input.also { cacheFile.writeText(it) }
   }

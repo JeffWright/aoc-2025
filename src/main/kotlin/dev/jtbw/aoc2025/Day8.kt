@@ -40,7 +40,7 @@ object Day8 {
       }
     }
 
-    return clusters.map { it.size }.sortedDescending().take(3).fold(1) { acc, i -> acc * i }
+    return clusters.map { it.size }.sortedDescending().take(3).reduce(Int::times)
   }
 
   fun part2(input: String): Any {

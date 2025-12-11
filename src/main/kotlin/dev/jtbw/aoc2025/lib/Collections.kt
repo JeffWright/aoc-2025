@@ -47,14 +47,16 @@ fun <T, R : Comparable<R>> Iterable<T>.multiMaxBy(n: Int, block: (T) -> R): List
   return q
 }
 
-fun <T> List<T>.slice(from: Int, to: Int) {}
-
 fun <T> List<T>.countOf(item: T): Int = count { it == item }
 
-private operator fun <E> MutableList<E>.set(indices: IntRange, value: E) {
+operator fun <E> MutableList<E>.set(indices: IntRange, value: E) {
   indices.forEach { this[it] = value }
 }
 
-private operator fun <E> MutableList<E>.set(indices: Iterable<Int>, value: E) {
+operator fun <E> MutableList<E>.set(indices: Iterable<Int>, value: E) {
   indices.forEach { this[it] = value }
+}
+
+fun <T> MutableMap<T, Int>.increment(key: T) {
+  this[key] = getOrDefault(key, 0)
 }
