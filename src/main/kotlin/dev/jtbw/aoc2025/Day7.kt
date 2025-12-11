@@ -20,10 +20,10 @@ object Day7 : AoCDay {
     val grid = input.trim().toGrid { Tile.from(it) }.toMutableGrid()
     val start = raytrace(grid, start = grid.offsetOfFirst { it == Tile.START })!!
 
-    return traversal(start, skipRepeats = true) { splitter ->
-        visit(splitter)
+    return traversal(start) { splitter ->
+        visitDFS(splitter)
         for (side in leftRight) {
-          raytrace(grid, start = splitter + side)?.let { child -> visit(child) }
+          raytrace(grid, start = splitter + side)?.let { child -> visitDFS(child) }
         }
       }
       .count()

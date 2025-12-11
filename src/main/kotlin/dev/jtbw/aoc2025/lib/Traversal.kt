@@ -1,97 +1,88 @@
 package dev.jtbw.aoc2025.lib
 
-import dev.jtbw.aoc2025.d
-import dev.jtbw.aoc2025.lib.twodeespace.Direction
-import dev.jtbw.aoc2025.lib.twodeespace.Offset
-import dev.jtbw.aoc2025.lib.twodeespace.Rect
-import dev.jtbw.aoc2025.lib.twodeespace.contains
-import dev.jtbw.aoc2025.lib.twodeespace.plus
-
 fun <T> traversal(
   start: T,
-  skipRepeats: Boolean = false,
+  block: TraversalContext<T>.(T) -> Unit,
+): Sequence<T> {
+  return traversal(start, {it}, block)
+}
+
+fun <T, K> traversal(
+  start: T,
+  skipRepeatsBy: ((T) -> K)? = null,
   block: TraversalContext<T>.(T) -> Unit,
 ): Sequence<T> {
   val q = ArrayDeque<Pair<T, Boolean>>().apply { add(start to false) }
   val firstVisits = mutableListOf<T>()
   val lastVisits = mutableListOf<T>()
-  val alreadyVisited = mutableSetOf<T>()
+  val alreadyVisited = mutableSetOf<K>()
 
   return sequence {
     val context =
       object : TraversalContext<T> {
-        override fun visit(t: T) {
+        override fun visitDFS(t: T) {
           firstVisits += t
         }
 
-        override fun visitLast(t: T) {
+        override fun visitBFS(t: T) {
           lastVisits += t
         }
       }
 
     while (q.isNotEmpty()) {
       val (next, final) = q.removeFirst()
-      if (final) {
-        yield(next)
-        continue
-      }
 
-      if (skipRepeats && next in alreadyVisited) {
-        continue
-      } else {
-        alreadyVisited += next
+      if (skipRepeatsBy != null) {
+        if (skipRepeatsBy(next) in alreadyVisited) {
+          continue
+        } else {
+          alreadyVisited += skipRepeatsBy(next)
+        }
       }
 
       firstVisits.clear()
       lastVisits.clear()
       context.block(next)
+      yield(next)
       firstVisits.asReversed().forEach { q.addFirst(it to (it == next)) }
-      lastVisits.asReversed().forEach { q.addLast(it to (it == next)) }
+      lastVisits.forEach { q.addLast(it to (it == next)) }
     }
   }
 }
 
-interface TraversalContext<T> {
-  fun visit(t: T)
+fun <T> traversalWithPath(
+  start: T,
+  block: TraversalContext<T>.(pathInclusive: List<T>, node: T) -> Unit,
+): Sequence<List<T>> {
+  return traversal<List<T>, T>(
+    start =listOf(start),
+    skipRepeatsBy = { it.last() }
+  ) { pathInclusive ->
+    val originalContext = this
+    val context = object : TraversalContext<T> {
+      override fun visitDFS(t: T) {
+        if(t == pathInclusive.last()) {
+          originalContext.visitDFS(pathInclusive)
+        } else {
+          originalContext.visitDFS(pathInclusive + t)
+        }
+      }
 
-  fun visitLast(t: T)
-}
-
-fun test() {
-  val root = BinaryTree<Int>(4)
-  root.left = BinaryTree(2)
-  root.left!!.left = BinaryTree(1)
-  root.left!!.right = BinaryTree(3)
-
-  root.right = BinaryTree(6)
-  root.right!!.left = BinaryTree(5)
-
-  d("Infix")
-  traversal(root) { node ->
-      node.left?.let { visit(it) }
-      visit(node)
-      node.right?.let { visit(it) }
-    }
-    .map { it.value }
-    .toList()
-    .let { println(it) }
-
-  val rect = Rect(Offset(0, 0), Offset(3, 3))
-
-  traversal(Offset(0, 0), skipRepeats = true) { node ->
-      d("T: $node")
-      visit(node)
-      Direction.orthogonals.forEach {
-        val next = node + it
-        if (next in rect) {
-          visitLast(next)
+      override fun visitBFS(t: T) {
+        if(t == pathInclusive.last()) {
+          originalContext.visitBFS(pathInclusive)
+        } else {
+          originalContext.visitBFS(pathInclusive + t)
         }
       }
     }
-    .toList()
-    .let { println(it) }
+    context.block(pathInclusive, pathInclusive.last())
+  }
 }
 
-fun main() {
-  test()
+interface TraversalContext<T> {
+  fun visitDFS(t: T)
+
+  fun visitBFS(t: T)
 }
+
